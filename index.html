@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="it">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PhBOX SUPERBACK</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <div id="app">
+      <section id="login-view" class="view">
+        <div class="auth-card">
+          <div class="brand-row">
+            <div class="brand-mark">SB</div>
+            <div>
+              <h1>PhBOX SUPERBACK</h1>
+              <p>Plancia centrale superuser</p>
+            </div>
+          </div>
+
+          <form id="login-form" class="stack gap-m">
+            <label>
+              <span>Email</span>
+              <input id="login-email" type="email" autocomplete="username" required />
+            </label>
+
+            <label>
+              <span>Password</span>
+              <input id="login-password" type="password" autocomplete="current-password" required />
+            </label>
+
+            <button id="login-submit" type="submit" class="primary">Accedi</button>
+          </form>
+
+          <div id="login-message" class="message hidden"></div>
+
+          <div class="auth-note">
+            <strong>Bootstrap richiesto</strong>
+            <p>
+              Firestore deve contenere <code>superback_config/main</code> con
+              <code>adminEmails</code> e Firebase Auth deve avere il tuo utente.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="app-view" class="view hidden">
+        <header class="topbar">
+          <div>
+            <h1>SUPERBACK</h1>
+            <p id="current-user-line">—</p>
+          </div>
+          <div class="topbar-actions">
+            <button id="refresh-button" class="secondary">Aggiorna</button>
+            <button id="logout-button" class="danger ghost">Esci</button>
+          </div>
+        </header>
+
+        <main class="layout">
+          <section class="panel summary-panel">
+            <div class="panel-header">
+              <h2>Riepilogo</h2>
+            </div>
+            <div class="summary-grid">
+              <article class="summary-card">
+                <span class="summary-label">Farmacie</span>
+                <strong id="stat-total">0</strong>
+              </article>
+              <article class="summary-card">
+                <span class="summary-label">Front attivi</span>
+                <strong id="stat-front">0</strong>
+              </article>
+              <article class="summary-card">
+                <span class="summary-label">Back attivi</span>
+                <strong id="stat-back">0</strong>
+              </article>
+              <article class="summary-card">
+                <span class="summary-label">Bloccate</span>
+                <strong id="stat-blocked">0</strong>
+              </article>
+            </div>
+          </section>
+
+          <section class="panel tenants-panel">
+            <div class="panel-header panel-header-wrap">
+              <div>
+                <h2>Farmacie</h2>
+                <p class="muted">Fonte di verità: Firestore</p>
+              </div>
+              <div class="toolbar">
+                <input id="tenant-search" type="search" placeholder="Cerca farmacia o email" />
+                <button id="create-tenant-button" class="primary">Nuova farmacia</button>
+              </div>
+            </div>
+
+            <div class="table-wrap">
+              <table>
+                <thead>
+                  <tr>
+                    <th>Farmacia</th>
+                    <th>Email login</th>
+                    <th>Tenant</th>
+                    <th>Front</th>
+                    <th>Back</th>
+                    <th>Stato</th>
+                    <th>Abbonamento</th>
+                    <th>Aggiornato</th>
+                    <th>Azioni</th>
+                  </tr>
+                </thead>
+                <tbody id="tenants-body"></tbody>
+              </table>
+            </div>
+          </section>
+
+          <section class="panel editor-panel">
+            <div class="panel-header">
+              <h2 id="editor-title">Nuova farmacia</h2>
+            </div>
+
+            <form id="tenant-form" class="stack gap-m">
+              <input id="tenant-id" type="hidden" />
+              <input id="tenant-original-email" type="hidden" />
+
+              <label>
+                <span>Nome farmacia</span>
+                <input id="tenant-name" type="text" maxlength="120" required />
+              </label>
+
+              <label>
+                <span>Email login farmacia</span>
+                <input id="tenant-email" type="email" maxlength="160" required />
+              </label>
+
+              <label>
+                <span>Stato abbonamento</span>
+                <select id="tenant-subscription">
+                  <option value="trial">trial</option>
+                  <option value="active">active</option>
+                  <option value="past_due">past_due</option>
+                  <option value="canceled">canceled</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Stato tenant</span>
+                <select id="tenant-status">
+                  <option value="active">active</option>
+                  <option value="blocked">blocked</option>
+                </select>
+              </label>
+
+              <label>
+                <span>Note</span>
+                <textarea id="tenant-notes" rows="4" maxlength="800"></textarea>
+              </label>
+
+              <div class="toggle-row">
+                <label class="checkbox-line">
+                  <input id="tenant-frontend-enabled" type="checkbox" checked />
+                  <span>Frontend attivo</span>
+                </label>
+                <label class="checkbox-line">
+                  <input id="tenant-backend-enabled" type="checkbox" checked />
+                  <span>Backend attivo</span>
+                </label>
+              </div>
+
+              <div class="form-actions">
+                <button id="save-tenant-button" type="submit" class="primary">Salva</button>
+                <button id="reset-tenant-button" type="button" class="secondary">Reset</button>
+              </div>
+            </form>
+          </section>
+
+          <section class="panel audit-panel">
+            <div class="panel-header">
+              <h2>Audit recente</h2>
+            </div>
+            <div id="audit-list" class="audit-list"></div>
+          </section>
+        </main>
+      </section>
+    </div>
+
+    <div id="toast" class="toast hidden"></div>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
